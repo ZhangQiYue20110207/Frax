@@ -21,10 +21,17 @@ int main()
     cout << a << endl;
     a.reciprocal();//reciprocal
     cout << a << endl;
+
     Fraction c(4, 5);
     Fraction d(7, 9);
     redu_frac_com_deno(&c, &d);
     cout << c.ret_num() << "/" << c.ret_deno() << endl;
     cout << d.ret_num() << "/" << d.ret_deno() << endl;
+
+    Fraction e(1, 2, false);
+    const Fraction f(1, 2, false);
+    cout << e.ret_pos() << endl;
+    cout << e.ret_pos() << endl;
+    
     return 0;
 }

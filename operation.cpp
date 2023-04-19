@@ -14,5 +14,25 @@ int main()
     cout << d << endl;
     cout << e << endl;
     cout << f << endl;
+    //
+    Fraction g = -a;
+    cout << g << endl;
+    Fraction pa(1, 3);
+    cout << ++pa << endl;
+    Fraction pb(1, 3);
+    cout << pb++ << endl;
+    Fraction pc(1, 3);
+    cout << --pc << endl;
+    Fraction pd(1, 3);
+    cout << pd-- << endl;
+    cout <<  (a < c) << endl;
+    cout << (a > c) << endl;
+    cout << (pa == pb) << endl;
+    cout << (a <= pb) << endl;
+    cout << (pb >= a) << endl;
+    Fraction l1(1, 2);
+    l1 = -l1;
+    Fraction l2(1, 2, false);
+    cout << l1 << " " << l2 << endl;
     return 0;
 }

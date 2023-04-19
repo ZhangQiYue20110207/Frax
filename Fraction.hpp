@@ -24,6 +24,8 @@ public:
     uint ret_num();//return numeractor
     const uint const_ret_deno() const;
     const uint const_ret_num() const;
+    bool ret_pos();//return positive or negative fraction
+    const bool const_ret_pos() const;
     double ref_value();//refresh and return value
     const double const_ref_value() const;//const object return value
     //overload operators;
@@ -121,6 +123,7 @@ uint Fraction::ret_num()
     uint n = this->num;
     return n;
 }
+
 const uint Fraction::const_ret_deno() const
 {
     uint d = this->deno;
@@ -131,6 +134,16 @@ const uint Fraction::const_ret_num() const
 {
     uint n = this->num;
     return n;
+}
+
+bool Fraction::ret_pos()
+{
+    return this->pos;
+}
+
+const bool Fraction::const_ret_pos() const
+{
+    return this->pos;
 }
 
 //****************overload operators;
