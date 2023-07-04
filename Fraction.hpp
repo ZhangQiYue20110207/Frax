@@ -12,22 +12,22 @@ class Fraction
 private:
     uint deno;//denominator
     uint num;//numeractor
+    //double value;
     bool pos;
-    double value;
 public:
-    Fraction(uint d, uint m, bool pos);
+    Fraction(uint d, uint m, bool p = true);
+    Fraction(uint n);
+    Fraction(int n);
+    Fraction(uint n, const Fraction a, bool p = true);
+    Fraction();
     ~Fraction();
     void univ_sc(uint x);
     void app_sc();
     void reciprocal();//reciprocal
-    uint ret_deno();//return denominator
-    uint ret_num();//return numeractor
-    const uint const_ret_deno() const;
-    const uint const_ret_num() const;
-    bool ret_pos();//return positive or negative fraction
-    const bool const_ret_pos() const;
-    double ref_value();//refresh and return value
-    const double const_ref_value() const;//const object return value
+    uint ret_deno() const;//return denominator
+    uint ret_num() const;//return numeractor
+    bool ret_pos() const;//return positive or negative fraction
+    double ret_value() const;//return value
     //overload operators;
     friend bool operator<(const Fraction &lhs, const Fraction &rhs);
     friend bool operator<=(const Fraction &lhs, const Fraction &rhs);
@@ -48,7 +48,41 @@ public:
     friend void redu_frac_com_deno(Fraction *lpr, Fraction *rpr);
 };
 
-Fraction::Fraction(uint m, uint d, bool p = true): num(m), deno(d), pos( (m == 0) ? true : p), value( ( ((m == 0) ? true : p) == true) ? (double)m / d : -( (double)m / d ) )
+//, value( (m == 0) ? 0.0 : (pos == true ? m / d : -(m / d)) )
+Fraction::Fraction(uint m, uint d, bool p): num(m), deno(d), pos( (m == 0) ? true : p)
+{
+    if (d == 0u)
+    {
+        throw 0;
+    }
+    
+}
+
+//, value(static_cast<double>(n) )
+Fraction::Fraction(uint n): num(n), deno(1), pos(true)
+{
+}
+
+//, value(static_cast<double>(n) )
+Fraction::Fraction(int n): num( abs(n) ), deno(1), pos( (0 > n) ? false : true )
+{
+}
+
+Fraction::Fraction(uint n, const Fraction a, bool p): deno(a.deno), num( n * a.deno + a.num ), pos(p)
+{
+    if (a.deno == 0u)
+    {
+        throw 0;
+    }
+    if (a.pos == false)
+    {
+        throw false;
+    }
+    
+    
+}
+
+Fraction::Fraction(): num(1), deno(2), pos(true)//, value(0.5)
 {
 }
 
@@ -101,47 +135,22 @@ void Fraction::reciprocal()//
     this->num = temp;
 }
 
-double Fraction::ref_value()
+double Fraction::ret_value() const
 {
-    this->value = (double)this->num / this->deno;
-    return this->value;
+    return (this->pos) ? ( (double)this->num / this->deno ) : ( 0.0 - (double)this->num / this->deno );
 }
 
-const double Fraction::const_ref_value() const
+uint Fraction::ret_deno() const
 {
-    return this->value;
+    return this->deno;
 }
 
-uint Fraction::ret_deno()
+uint Fraction::ret_num() const
 {
-    uint d = this->deno;
-    return d;
+    return this->num;
 }
 
-uint Fraction::ret_num()
-{
-    uint n = this->num;
-    return n;
-}
-
-const uint Fraction::const_ret_deno() const
-{
-    uint d = this->deno;
-    return d;
-}
-
-const uint Fraction::const_ret_num() const
-{
-    uint n = this->num;
-    return n;
-}
-
-bool Fraction::ret_pos()
-{
-    return this->pos;
-}
-
-const bool Fraction::const_ret_pos() const
+bool Fraction::ret_pos() const
 {
     return this->pos;
 }
@@ -176,29 +185,32 @@ Fraction operator+(const Fraction &lhs, const Fraction &rhs)
     uint lnm = lhs.num * (rde / mcf);
     uint rnm = rhs.num * (lde / mcf);
     uint lcm = lea_com_mul(lde, rde);
-    uint sum;
     bool lpo = lhs.pos;
     bool rpo = rhs.pos;
-    if (rpo == true)
+    bool tpo;
+    uint tnm;
+    if (lpo == rpo)
     {
-        sum = lnm + rnm;
+        tnm = lnm + rnm;
+        tpo = lpo;
+        
     }
     else
     {
         if (lnm >= rnm)
         {
-            sum = lnm - rnm;
+            tnm = lnm - rnm;
+            tpo = lpo;
         }
         else
         {
-            lpo = -lpo;
-            sum = rnm - lnm;
-            
+            tnm = rnm - lnm;
+            tpo = rpo;
         }
         
     }
     
-    Fraction res(sum, lcm, lpo);
+    Fraction res(tnm, lcm, tpo);
     return res;
     //
 }
@@ -211,28 +223,32 @@ Fraction operator-(const Fraction &lhs, const Fraction &rhs)
     uint lnm = lhs.num * (rde / mcf);
     uint rnm = rhs.num * (lde / mcf);
     uint lcm = lea_com_mul(lde, rde);
-    uint sum;
     bool lpo = lhs.pos;
-    bool rpo = rhs.pos;
-    if (rhs.pos == false)
+    bool rpo = (rhs.pos) ? false : true;
+    bool tpo;
+    uint tnm;
+    if (lpo == rpo)
     {
-        sum = lnm + rnm;
+        tnm = lnm + rnm;
+        tpo = lpo;
+        
     }
     else
     {
         if (lnm >= rnm)
         {
-            sum = lnm - rnm;
+            tnm = lnm - rnm;
+            tpo = lpo;
         }
         else
         {
-            lpo = -lpo;
-            sum = rnm - lnm;
-            
+            tnm = rnm - lnm;
+            tpo = rpo;
         }
         
     }
-    Fraction res(lnm - rnm, lcm);
+    
+    Fraction res(tnm, lcm, tpo);
     return res;
     //
 }
@@ -246,7 +262,7 @@ Fraction operator*(const Fraction &lhs, const Fraction &rhs)
     bool lpo = lhs.pos;
     bool rpo = rhs.pos;
     bool opos;
-    if ( (lpo == true && rpo == false) || (lpo == false && rpo == true) )
+    if ( lpo == rpo )
     {
         opos = false;
     }
@@ -261,15 +277,28 @@ Fraction operator*(const Fraction &lhs, const Fraction &rhs)
 
 Fraction operator/(const Fraction &lhs, const Fraction &rhs)
 {
-    Fraction rhsr = rhs;
-    rhsr.reciprocal();
-    Fraction res = lhs * rhsr;
+    if (rhs.num == 0)
+    {
+        throw 0;
+    }
+    
+    uint lde = lhs.deno;
+    uint rde = rhs.num;
+    uint lnm = lhs.num;
+    uint rnm = rhs.deno;
     bool lpo = lhs.pos;
     bool rpo = rhs.pos;
-    if ( (lpo == true && rpo == false) || (lpo == false && rpo == true) )
+    bool opos;
+    if ( lpo == rpo )
     {
-        -res;
+        opos = false;
     }
+    else
+    {
+        opos = true;
+    }
+    
+    Fraction res(lnm * rnm, lde * rde, opos);
     return res;
 }
 
